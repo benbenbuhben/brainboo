@@ -30,23 +30,22 @@ export async function createProfile(profileData) {
 
 export async function fetchOrCreateProfile(getAccessTokenSilently, auth0User) {
   try {
-    return fetchProfile(getAccessTokenSilently);
+    // Await the result so that any error can be caught by the catch block
+    return await fetchProfile(getAccessTokenSilently);
   } catch (error) {
     console.error('[fetchOrCreateProfile] Error fetching profile:', error);
-    // If the profile isn't found, try to create it
     if (error.status === 404) {
       try {
-        return createProfile({
+        return await createProfile({
           auth0Id: auth0User.sub,
           email: auth0User.email,
           name: auth0User.name,
           profilePicture: auth0User.picture,
         });
       } catch (creationError) {
-        // Check if the error message indicates that the profile already exists
         const lowerMessage = creationError.message.toLowerCase();
         if (lowerMessage.includes('duplicate') || lowerMessage.includes('already exists')) {
-          return fetchProfile(getAccessTokenSilently);
+          return await fetchProfile(getAccessTokenSilently);
         }
         throw creationError;
       }
@@ -54,6 +53,8 @@ export async function fetchOrCreateProfile(getAccessTokenSilently, auth0User) {
     throw error;
   }
 }
+
+
 
 export async function updateProfile(getAccessTokenSilently, profileData) {
   const token = await getAccessTokenSilently();
