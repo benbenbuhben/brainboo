@@ -4,7 +4,7 @@ import { Box, Typography, Avatar, Grid } from '@mui/material';
 export default function ProfileView({ profile, userEmail }) {
   // Use the profile picture from the profile if available,
   // otherwise, you might use a placeholder.
-  const profilePicture = profile.profilePicture || 'https://via.placeholder.com/150';
+  const profilePicture = profile.profilePicture || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
 
   return (
     <Box>

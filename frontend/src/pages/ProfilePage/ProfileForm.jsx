@@ -2,7 +2,7 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Typography } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
-import { updateProfile } from '../../api/profile';
+import { updateProfile } from '../../api';
 
 export default function ProfileForm({ profile, refetch }) {
   const { getAccessTokenSilently } = useAuth0();

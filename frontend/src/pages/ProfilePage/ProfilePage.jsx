@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Tabs, Tab, CircularProgress, Typography } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
+
 import { useUserProfile } from '../../hooks';
 import ProfileForm from './ProfileForm';
 import ProfileView from './ProfileView';

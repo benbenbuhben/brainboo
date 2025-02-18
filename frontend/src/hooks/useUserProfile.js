@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth0 } from '@auth0/auth0-react';
-import { fetchOrCreateProfile } from '../api/profile';
+import { fetchOrCreateProfile } from '../api';
 
 export default function useUserProfile() {
   const { user, isAuthenticated, getAccessTokenSilently } = useAuth0();
