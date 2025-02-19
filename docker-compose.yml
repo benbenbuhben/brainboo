@@ -34,6 +34,10 @@ services:
       - "5001:5000"
     environment:
       - MONGO_URI=mongodb://mongo:27017/brainboo
+    volumes:
+      - ./backend:/usr/src/app        # Mount local backend source code
+      - /usr/src/app/node_modules     # Use the container's node_modules
+    command: npm run dev              # Use nodemon for hot-reloading
     depends_on:
       - mongo
 
