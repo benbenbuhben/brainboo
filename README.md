@@ -70,6 +70,27 @@ This command builds and starts the containers for MongoDB, Mongo Express, the ba
 - **Frontend:** Open your browser to [http://localhost:3000](http://localhost:3000)
 - **Mongo Express:** Open your browser to [http://localhost:8081](http://localhost:8081) (login credentials are set in the docker-compose file)
 
+## Seeding the Database
+
+BrainBoo includes a seed script (seedFakeUsers.js) to insert fake users and generate random swipe records. The script features interactive prompts that:
+
+- Warn you if there are already more than 10 users in the database.
+- Notify you if no users exist (suggesting you log in to create your own user first).
+- Ask for confirmation before proceeding.
+- Insert fake user data without overwriting existing users.
+- Optionally add random swipe records for the new users.
+
+### How to Run the Seed Script
+
+1. Ensure the Docker Compose stack is up and running.
+
+2. Run the Seed Script in the Backend Container:
+
+```bash
+docker exec -it brainboo-backend node seedFakeUsers.js
+```
+This command opens an interactive terminal in the backend container. Follow the prompts to complete the seeding process.
+
 ## Current State and Next Steps
 
 ### Current State
