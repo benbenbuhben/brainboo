@@ -1,7 +1,9 @@
+// src/routes.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { LandingPage, LoginPage, MatchesPage, ProfilePage, DiscoverPage } from './pages';
 import { NavBar, TabNav } from './components';
+import ProfileGuard from './components/ProfileGuard';
 
 function Layout() {
   return (
@@ -13,16 +15,30 @@ function Layout() {
   );
 }
 
+// Wrap only pages that require a complete profile.
+function ProtectedPages() {
+  return (
+    <ProfileGuard>
+      <Outlet />
+    </ProfileGuard>
+  );
+}
+
 export default function AppRoutes() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<LandingPage />} />
+        <Route element={<Layout />}>
+          {/* Public Routes */}
           <Route path="login" element={<LoginPage />} />
-          <Route path="discover" element={<DiscoverPage />} />
-          <Route path="matches" element={<MatchesPage />} />
           <Route path="profile" element={<ProfilePage />} />
+
+          {/* Protected Routes */}
+          <Route element={<ProtectedPages />}>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="discover" element={<DiscoverPage />} />
+            <Route path="matches" element={<MatchesPage />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>

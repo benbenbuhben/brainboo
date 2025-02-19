@@ -3,7 +3,7 @@ import { Box, Tabs, Tab, CircularProgress, Typography } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 
 import { useUserProfile } from '../../hooks';
-import ProfileForm from './ProfileForm';
+import ProfileEdit from './ProfileEdit';
 import ProfileView from './ProfileView';
 
 export default function ProfilePage() {
@@ -34,12 +34,12 @@ export default function ProfilePage() {
   return (
     <Box sx={{ padding: '1rem' }}>
       <Tabs value={tabIndex} onChange={handleTabChange} aria-label="Profile Tabs">
-        <Tab label="View Profile" />
         <Tab label="Edit Profile" />
+        <Tab label="View Profile" />
       </Tabs>
       <Box sx={{ mt: 3 }}>
-        {tabIndex === 0 && <ProfileView profile={profile} userEmail={user.email} />}
-        {tabIndex === 1 && <ProfileForm profile={profile} refetch={refetch} />}
+        {tabIndex === 0 && <ProfileEdit profile={profile} refetch={refetch} />}
+        {tabIndex === 1 && <ProfileView profile={profile} userEmail={user.email} />}
       </Box>
     </Box>
   );

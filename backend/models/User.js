@@ -8,6 +8,7 @@ const UserSchema = new mongoose.Schema({
   major: { type: String, default: '' },
   topics: { type: [String], default: [] },
   bio: { type: String, default: '' },
+  profileComplete: { type: Boolean, default: false }, 
 });
 
 UserSchema.index({ auth0Id: 1 }, { unique: true });
