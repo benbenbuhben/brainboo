@@ -50,24 +50,25 @@ router.post('/', async (req, res) => {
 router.put('/me', jwtCheck, async (req, res) => {
   try {
     const auth0Id = req.auth.payload.sub;
-    const { name, profilePicture, major, topics, bio } = req.body;
-
-    // Create an object with only the provided fields
-    const updateData = {};
-    if (name !== undefined) updateData.name = name;
-    if (profilePicture !== undefined) updateData.profilePicture = profilePicture;
-    if (major !== undefined) updateData.major = major;
-    if (topics !== undefined) updateData.topics = topics;
-    if (bio !== undefined) updateData.bio = bio;
-
-    const user = await User.findOneAndUpdate({ auth0Id }, updateData, { new: true });
+    let user = await User.findOne({ auth0Id });
     if (!user) {
       return res.status(404).json({ error: 'User not found.' });
     }
+
+    // Update only the provided fields.
+    if (req.body.name !== undefined) user.name = req.body.name;
+    if (req.body.profilePicture !== undefined) user.profilePicture = req.body.profilePicture;
+    if (req.body.major !== undefined) user.major = req.body.major;
+    if (req.body.topics !== undefined) user.topics = req.body.topics;
+    if (req.body.bio !== undefined) user.bio = req.body.bio;
+
+    // The pre-save hook will run when .save() is called.
+    user = await user.save();
     res.json(user);
   } catch (error) {
     res.status(500).json({ error: 'Failed to update user.' });
   }
 });
+
 
 export default router;
