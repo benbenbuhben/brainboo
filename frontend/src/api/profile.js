@@ -59,27 +59,17 @@ export async function fetchOrCreateProfile(getAccessTokenSilently, auth0User) {
 
 export async function updateProfile(getAccessTokenSilently, profileData) {
   const token = await getAccessTokenSilently();
-
-  // Determine if the profile should be considered complete.
-  const profileComplete = !!(profileData.major && profileData.topics && profileData.topics.length > 0);
-
-  const updatedData = {
-    ...profileData,
-    profileComplete, // update the flag based on completeness criteria
-  };
-
   const response = await fetch(`${API_URL}/api/users/me`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify(updatedData),
+    body: JSON.stringify(profileData),
   });
   if (!response.ok) {
     throw new Error('Error updating profile');
   }
   return response.json();
 }
-
 
