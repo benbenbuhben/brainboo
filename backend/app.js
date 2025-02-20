@@ -26,6 +26,7 @@ import userRoutes from './routes/user.js';
 import discoverRoutes from './routes/discover.js';
 import swipeRoutes from './routes/swipe.js'; // Import the swipe route
 import matchRoutes from './routes/match.js'; // Import the match route
+import Message from './models/Message.js';
 
 app.use('/api', apiRoutes);
 app.use('/api/users', userRoutes);
@@ -43,10 +44,15 @@ io.on("connection", (socket) => {
     console.log(`User ${userId} is online with socket ID ${socket.id}`);
   });
 
-  socket.on("sendMessage", ( { senderId, receiverId, message } ) => {
-    const senderSocketId = onlineUsers.get(senderId);
+  socket.on("sendMessage", async ( { senderId, receiverId, message } ) => {
     const receiverSocketId = onlineUsers.get(receiverId);
-    if (senderSocketId && receiverSocketId) {
+    if (receiverSocketId) {
+      const newMessage = new Message({
+        sender: senderId,
+        receiver: receiverId,
+        content: message,
+      });
+      await newMessage.save();
       io.to(receiverSocketId).emit("message", {
         senderId,
         receiverId,
