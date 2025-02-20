@@ -1,7 +1,10 @@
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001';
+
+
 export async function fetchProfile(getAccessTokenSilently) {
   const token = await getAccessTokenSilently(); // get the access token
 
-  const response = await fetch('http://localhost:5001/api/users/me', {
+  const response = await fetch(`${API_URL}/api/users/me`, {
     headers: {
       'Authorization': `Bearer ${token}`
     },
@@ -16,7 +19,7 @@ export async function fetchProfile(getAccessTokenSilently) {
 }
 
 export async function createProfile(profileData) {
-  const response = await fetch('http://localhost:5001/api/users', {
+  const response = await fetch(`${API_URL}/api/users`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(profileData),
@@ -65,7 +68,7 @@ export async function updateProfile(getAccessTokenSilently, profileData) {
     profileComplete, // update the flag based on completeness criteria
   };
 
-  const response = await fetch('http://localhost:5001/api/users/me', {
+  const response = await fetch(`${API_URL}/api/users/me`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
