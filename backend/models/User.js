@@ -11,7 +11,6 @@ const UserSchema = new mongoose.Schema({
   profileComplete: { type: Boolean, default: false },
 });
 
-UserSchema.index({ auth0Id: 1 }, { unique: true });
 
 // Pre-save hook to recalculate profileComplete
 UserSchema.pre('save', function(next) {

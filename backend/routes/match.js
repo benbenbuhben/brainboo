@@ -1,6 +1,6 @@
 import { Router } from "express";
 import User from "../models/User.js";
-import jwtCheck from "../authMiddleware";
+import jwtCheck from "../authMiddleware.js";
 import Match from '../models/Match.js';
 
 const router = Router();
