@@ -1,8 +1,9 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMatches } from "../../hooks";
+import { useMatches } from "../hooks";
 import { useState } from "react";
 import { Avatar, Button, CircularProgress, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
-import ChatModal from "../../components/ChatModal";
+import ChatModal from "../components/ChatModal.jsx";
+
 
 export default function MatchesPage() {
   const { isAuthenticated, user } = useAuth0();
