@@ -43,9 +43,7 @@ export default function MatchesPage() {
         <Typography variant="body1">You have no matches yet.</Typography>
       ) : (
         <List>
-          {matches.map((match) => {
-            const matchedUser = match.user1._id === user.sub ? match.user2 : match.user1;
-
+          {matches.map((matchedUser) => {
             return (
               <ListItem key={matchedUser._id} secondaryAction={
                 <Button variant="contained" color="primary" onClick={() => handleChatClick(matchedUser)}>

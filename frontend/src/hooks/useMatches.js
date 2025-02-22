@@ -9,9 +9,10 @@ export default function useMatches() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const getMatches = async () => {
+    const fetchMatches = async () => {
       try {
         const data = await getMatches(getAccessTokenSilently);
+        console.log("Fetched matches:", data);
         setMatches(data);
       } catch (err) {
         setError(err);
@@ -20,7 +21,7 @@ export default function useMatches() {
       }
     };
 
-    getMatches();
+    fetchMatches();
   }, [getAccessTokenSilently]);
 
   return { matches, isLoading, error };

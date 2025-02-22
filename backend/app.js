@@ -7,7 +7,7 @@ import userRoutes from './routes/user.js';
 import discoverRoutes from './routes/discover.js';
 import swipeRoutes from './routes/swipe.js';
 import matchRoutes from './routes/match.js';
-import Message from './models/Message.js';
+import chatRoutes from './routes/chat.js';
 
 dotenv.config();
 
@@ -28,6 +28,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/discover', discoverRoutes);
 app.use('/api/swipes', swipeRoutes);
 app.use('/api/matches', matchRoutes);
+app.use('/api/chats', chatRoutes);
 
 // Test route
 app.get('/', (req, res) => {
