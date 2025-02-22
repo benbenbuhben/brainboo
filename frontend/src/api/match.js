@@ -22,7 +22,8 @@ export async function getMatches(getAccessTokenSilently) {
             error.status = response.status;
             throw error;
         }
-        return response.json();
+        const resData = await response.json();
+        return resData;
     } catch (error) {
         console.error(error);
         throw error;

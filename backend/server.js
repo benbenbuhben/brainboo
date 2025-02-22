@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import http from 'http';
 import { Server } from 'socket.io';
 import app from './app.js';
+import Message from './models/Message.js';
 
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/brainboo';
@@ -34,14 +35,19 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
     try {
       const receiverSocketId = onlineUsers.get(receiverId);
+      const senderSocketId = onlineUsers.get(socket.id);
       if (receiverSocketId) {
         const newMessage = new Message({
-          sender: senderId,
-          receiver: receiverId,
+          sender: senderId, // auth0Id
+          receiver: receiverId, // auth0Id
           content: message,
         });
         await newMessage.save();
-        io.to(receiverSocketId).emit('message', { senderId, receiverId, message });
+        io.to(receiverSocketId).emit('receiveMessage', { senderId, receiverId, message });
+
+        if (senderSocketId) {
+          io.to(senderSocketId).emit('receiveMessage', { senderId, receiverId, message });
+        }
       }
     } catch (error) {
       console.error('Error sending message:', error);
