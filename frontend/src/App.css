@@ -12,10 +12,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #f62f79aa); /* Pink shadow on hover */
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #fcbe31aa); /* Yellow shadow for React logo */
 }
 
 @keyframes logo-spin {
@@ -35,8 +35,9 @@
 
 .card {
   padding: 2em;
+  border: 1px solid #f62f79; /* Pink border for cards */
 }
 
 .read-the-docs {
-  color: #888;
+  color: #f62f79; /* Pink for this text */
 }

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { AppBar, Toolbar, Typography, Button, IconButton, Menu, MenuItem, Avatar } from '@mui/material';
+import { AppBar, Toolbar, Button, IconButton, Menu, MenuItem, Avatar } from '@mui/material';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Link } from 'react-router-dom';
 
@@ -21,22 +21,24 @@ export default function NavBar() {
   };
 
   return (
-    <AppBar position="static">
-      <Toolbar>
-        {/* Brand/Logo – linking to home */}
-        <Typography
-          variant="h6"
-          component={Link}
-          to="/"
-          sx={{ flexGrow: 1, textDecoration: 'none', color: 'inherit' }}
-        >
-          BrainBoo
-        </Typography>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: '#ffffff' }} // White background for AppBar
+    >
+      <Toolbar sx={{ justifyContent: 'space-between' }}>
+        {/* Replace BrainBoo title with logo */}
+        <IconButton component={Link} to="/" edge="start" sx={{ p: 0 }}>
+          <img
+            src="/logo.png" // Replace with your logo path
+            alt="BrainBoo Logo"
+            style={{ height: '40px' }} // Adjust height as needed
+          />
+        </IconButton>
 
         {isAuthenticated ? (
-          <>
-            {/* Display the user's avatar */}
-            <IconButton onClick={handleAvatarClick} color="inherit">
+          <div>
+            {/* Display the user's avatar on the right */}
+            <IconButton onClick={handleAvatarClick} sx={{ color: '#000000' }}>
               <Avatar alt={user.name} src={user.picture} />
             </IconButton>
             <Menu
@@ -44,23 +46,23 @@ export default function NavBar() {
               open={Boolean(anchorEl)}
               onClose={handleMenuClose}
             >
-              {/* Link to profile page */}
               <MenuItem component={Link} to="/profile" onClick={handleMenuClose}>
                 Profile
               </MenuItem>
-              {/* Logout option */}
               <MenuItem onClick={handleLogout}>
                 Logout
               </MenuItem>
             </Menu>
-          </>
+          </div>
         ) : (
-          // If not authenticated, show a Login button
-          <Button color="inherit" onClick={() => loginWithRedirect()}>
+          // Login button with custom styling
+          <Button
+            onClick={() => loginWithRedirect()}
+          >
             Login
           </Button>
         )}
       </Toolbar>
     </AppBar>
   );
-};
+}

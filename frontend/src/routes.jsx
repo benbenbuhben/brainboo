@@ -1,21 +1,30 @@
-// src/routes.jsx
 import React from 'react';
 import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
 import { LandingPage, LoginPage, MatchesPage, ProfilePage, DiscoverPage } from './pages';
 import { NavBar, TabNav } from './components';
 import ProfileGuard from './components/ProfileGuard';
+import { Box } from '@mui/material';
 
 function Layout() {
   return (
-    <>
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        alignItems: 'center', // Center horizontally
+        width: '100%', // Full width within the parent (70% from App.jsx)
+      }}
+    >
       <NavBar />
       <TabNav />
-      <Outlet />
-    </>
+      <Box sx={{ flexGrow: 1, width: '100%' }}>
+        <Outlet />
+      </Box>
+    </Box>
   );
 }
 
-// Wrap only pages that require a complete profile.
 function ProtectedPages() {
   return (
     <ProfileGuard>

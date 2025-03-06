@@ -12,7 +12,9 @@ export default function ProfilePage() {
   const [tabIndex, setTabIndex] = useState(0);
 
   if (!isAuthenticated) {
-    return <div>Please log in to view your profile.</div>;
+    return <div
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
+    >Please log in to view your profile.</div>;
   }
 
   if (isLoading) {

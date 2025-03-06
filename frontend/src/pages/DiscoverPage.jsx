@@ -20,7 +20,9 @@ export default function DiscoverPage() {
   }
 
   if (!discoverUsers || discoverUsers.length === 0 || currentIndex >= discoverUsers.length) {
-    return <Typography>No more potential study partners found!</Typography>;
+    return <Typography
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
+    >No more potential study partners found!</Typography>;
   }
 
   const currentUser = discoverUsers[currentIndex];

@@ -12,7 +12,9 @@ export default function MatchesPage() {
   const [openChat, setOpenChat] = useState(false);
 
   if (!isAuthenticated) {
-    return <div>Please log in to view your matches.</div>;
+    return <div
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
+    >Please log in to view your matches.</div>;
   }
 
   if (isLoading) {
