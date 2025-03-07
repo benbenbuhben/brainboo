@@ -37,7 +37,7 @@ export default function MatchesPage() {
 
   return (
     <div>
-      <Typography variant="h4" gutterBottom>
+      <Typography variant="h6" gutterBottom sx={{ mt: 2 }}>
         {user.name}'s Matches
       </Typography>
 

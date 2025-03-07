@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CircularProgress, Typography, Box, Button } from '@mui/material';
+import { Favorite, HeartBroken } from '@mui/icons-material';
 import { useDiscoverUsers, useSubmitSwipe } from '../hooks';
 import { UserCard } from '../components';
 
@@ -51,19 +52,41 @@ export default function DiscoverPage() {
           <Box sx={{ marginTop: 2, display: 'flex', gap: 2 }}>
             <Button
               variant="outlined"
-              color="error"
               onClick={() => handleSwipe(false)}
               disabled={isSubmitting}
+              sx={{
+                borderColor: "#000000 !important" ,
+                backgroundColor: "#ffffff !important",
+                color: "#000000 !important",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                "&:hover": {
+                  backgroundColor: "#f5f5f5 !important",
+                  borderColor: "#000000 !important",
+                }
+              }}
             >
               No
+              <HeartBroken sx={{ color: "#000000" }} />
             </Button>
             <Button
               variant="contained"
-              color="primary"
               onClick={() => handleSwipe(true)}
               disabled={isSubmitting}
+              sx={{
+                backgroundColor: "#f62f79 !important",
+                color: "#ffffff !important",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                "&:hover": {
+                  backgroundColor: "#e0296a !important",
+                }
+              }}
             >
               Yes
+              <Favorite sx={{ color: '#ffffff' }} />
             </Button>
           </Box>
         </>

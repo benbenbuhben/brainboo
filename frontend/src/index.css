@@ -34,24 +34,26 @@ h1 {
 }
 
 button {
-  border-radius: 8px;
+  border-radius: 12px;
   border: 1px solid transparent;
-  padding: 0.6em 1.2em;
+  padding: 0.4em 1em;
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
   background-color: #fcbe31; /* Yello background for buttons */
   color: #ffffff; /* White text on buttons */
   cursor: pointer;
-  transition: background-color 0.25s, border-color 0.25s;
+  transition: background-color 0.25s, border-color 0.25s box-shadow 0.25s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 button:hover {
-  background-color: #f62f79; /* Yellow background on hover */
-  border-color: #f62f79; /* Pink border on hover */
+  background-color: #f62f79; /* pink background on hover */
+  border-color: #f62f79; /* pink border on hover */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
 }
 button:focus,
 button:focus-visible {
-  outline: 4px solid #f62f79; /* Yellow outline for focus */
+  outline: 4px solid #f62f79; /* Pink outline for focus */
 }
 
 .nav-link {
@@ -69,24 +71,26 @@ button:focus-visible {
 }
 
 .MuiButton-root {
-  border-radius: 8px !important;
+  border-radius: 12px !important;
   border: 1px solid transparent !important;
-  padding: 0.6em 1.2em !important;
+  padding: 0.4em 1em !important;
   font-size: 1em !important;
   font-weight: 500 !important;
   font-family: inherit !important;
   background-color: #fcbe31 !important;
   color: #ffffff !important;
   cursor: pointer !important;
-  transition: background-color 0.25s, border-color 0.25s !important;
+  transition: background-color 0.25s, border-color 0.25s, box-shadow 0.2s !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
 }
 
 .MuiButton-root:hover {
   background-color: #f62f79 !important;
-  border-color: #f62f79 !important;
+  /* border-color: #f62f79 !important; */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
 }
 
-.MuiButton-root:focus,
+/* .MuiButton-root:focus,
 .MuiButton-root:focus-visible {
   outline: 4px solid #f62f79 !important;
-}
+} */
