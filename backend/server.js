@@ -12,7 +12,7 @@ const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/brainboo';
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: 'http://localhost:5173',
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST'],
   },
 });
@@ -35,7 +35,8 @@ io.on('connection', (socket) => {
   socket.on('sendMessage', async ({ senderId, receiverId, message }) => {
     try {
       const receiverSocketId = onlineUsers.get(receiverId);
-      const senderSocketId = onlineUsers.get(socket.id);
+      const senderSocketId = onlineUsers.get(senderId);
+
       if (receiverSocketId) {
         const newMessage = new Message({
           sender: senderId, // auth0Id
