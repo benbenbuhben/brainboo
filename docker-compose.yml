@@ -55,6 +55,22 @@ services:
     depends_on:
       - backend
 
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama_data:/root/.ollama
+      - ./entrypoint.sh:/entrypoint.sh:ro
+    entrypoint: ["/bin/bash", "/entrypoint.sh"]
+    restart: always
+    mem_limit: 8g
+
+
+
+
 volumes:
   mongo-data:
   node_modules:
+  ollama-models:

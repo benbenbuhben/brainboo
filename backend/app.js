@@ -8,6 +8,7 @@ import discoverRoutes from './routes/discover.js';
 import swipeRoutes from './routes/swipe.js';
 import matchRoutes from './routes/match.js';
 import chatRoutes from './routes/chat.js';
+import chatSummaryRoutes from './routes/chatSummary.js';
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ app.use('/api/discover', discoverRoutes);
 app.use('/api/swipes', swipeRoutes);
 app.use('/api/matches', matchRoutes);
 app.use('/api/chats', chatRoutes);
+app.use('/api/chats', chatSummaryRoutes);
 
 // Test route
 app.get('/', (req, res) => {

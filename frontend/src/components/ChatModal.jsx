@@ -1,8 +1,10 @@
+// frontend/src/components/ChatModal.jsx
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
 import { Dialog, TextField, Button, Typography } from "@mui/material";
 import { getChats } from "../api";
+import { useChatSummary } from "../hooks";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 const socket = io(API_URL);
@@ -15,6 +17,9 @@ export default function ChatModal({ open, onClose, user, peer }) {
   const [hasMore, setHasMore] = useState(true);
   const chatContainerRef = useRef(null);
   const [initialLoad, setInitialLoad] = useState(true);
+
+
+  const { mutate: summarizeChat, isPending: isSummarizing } = useChatSummary();
 
   useEffect(() => {
     if (user && peer && open) {
@@ -47,7 +52,7 @@ export default function ChatModal({ open, onClose, user, peer }) {
         setInitialLoad(false);
       }
     }
-  }, [messages]);
+  }, [messages, initialLoad]);
 
   const handleScroll = async () => {
     const container = chatContainerRef.current;
@@ -76,6 +81,52 @@ export default function ChatModal({ open, onClose, user, peer }) {
     }
   };
 
+  const handleSummarize = () => {
+    if (!user || !peer) return;
+  
+    // Add an initial AI message with placeholder text.
+    setMessages((prev) => [
+      ...prev,
+      { sender: "AI", content: "AI Says: " }
+    ]);
+  
+    summarizeChat(
+      {
+        senderId: user.sub,
+        receiverId: peer.auth0Id,
+        // The onChunk callback now parses JSON objects.
+        onChunk: (chunk) => {
+          // Use a regex to match complete JSON objects in the chunk.
+          const regex = /{[^}]+}/g;
+          const matches = chunk.match(regex);
+          if (matches) {
+            matches.forEach((match) => {
+              try {
+                const parsed = JSON.parse(match);
+                const text = parsed.response;
+                if (text) {
+                  // Append the response text only.
+                  setMessages((prev) => {
+                    const lastMsg = prev[prev.length - 1];
+                    const updatedMsg = { ...lastMsg, content: lastMsg.content + text };
+                    return [...prev.slice(0, -1), updatedMsg];
+                  });
+                }
+              } catch (error) {
+                console.error("Error parsing JSON chunk:", error);
+              }
+            });
+          }
+        }
+      },
+      {
+        onError: (error) => {
+          console.error("Summarization failed:", error);
+        },
+      }
+    );
+  };
+
   return (
     <Dialog open={open} onClose={onClose} fullWidth>
       <div style={{ padding: "20px" }}>
@@ -91,7 +142,10 @@ export default function ChatModal({ open, onClose, user, peer }) {
           onScroll={handleScroll}
         >
           {messages.map((msg, index) => (
-            <div key={index} style={{ textAlign: msg.sender === user.sub ? "right" : "left" }}>
+            <div
+              key={index}
+              style={{ textAlign: msg.sender === user.sub ? "right" : "left" }}
+            >
               <Typography
                 style={{
                   background: msg.sender === user.sub ? "#4caf50" : "#f1f1f1",
@@ -110,13 +164,23 @@ export default function ChatModal({ open, onClose, user, peer }) {
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
           placeholder="Type a message..."
+          style={{ marginTop: "10px" }}
         />
-        <Button variant="contained" color="primary" onClick={sendMessage} style={{ marginTop: "10px" }}>
-          Send
-        </Button>
-        <Button onClick={onClose} color="secondary" style={{ marginTop: "10px" }}>
-          Close
-        </Button>
+        <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
+          <Button variant="contained" color="primary" onClick={sendMessage}>
+            Send
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleSummarize}
+            disabled={isSummarizing}
+          >
+            {isSummarizing ? "Summarizing..." : "Summarize with AI"}
+          </Button>
+          <Button onClick={onClose} color="secondary">
+            Close
+          </Button>
+        </div>
       </div>
     </Dialog>
   );
