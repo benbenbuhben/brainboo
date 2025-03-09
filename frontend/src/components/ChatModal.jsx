@@ -140,7 +140,7 @@ export default function ChatModal({ open, onClose, user, peer }) {
             <div key={index} style={{ textAlign: msg.sender === user.sub ? "right" : "left" }}>
               <Typography
                 style={{
-                  background: msg.sender === user.sub ? "#000000" : "#f1f1f1",
+                  background: msg.sender === user.sub ? "#f62f79" : "#f1f1f1",
                   color: msg.sender === user.sub ? "#ffffff" : "#000000",
                   padding: "5px 10px",
                   borderRadius: "8px",

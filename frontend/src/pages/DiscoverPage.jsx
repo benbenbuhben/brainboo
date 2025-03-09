@@ -21,26 +21,36 @@ export default function DiscoverPage() {
   }
 
   if (!discoverUsers || discoverUsers.length === 0 || currentIndex >= discoverUsers.length) {
-    return <Typography
-      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
-    >No more potential study partners found!</Typography>;
+    return (
+      <Typography
+        style={{ textAlign: 'center' }}
+      >
+        No more potential study partners found!
+      </Typography>
+    );
   }
 
   const currentUser = discoverUsers[currentIndex];
 
   const handleSwipe = async (liked) => {
     setIsSubmitting(true);
-    // Submit the swipe action:
     submitSwipe({ swipeeId: currentUser._id, liked });
-
-    await sleep(1000); // Simulate network delay
+    await sleep(1000);
     setIsSubmitting(false);
-    // Move to the next user:
     setCurrentIndex((prev) => prev + 1);
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    // Use full height (minus navbar) & center content
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: 'calc(100vh - 64px)',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
       {isSubmitting ? (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
           <CircularProgress />
@@ -53,9 +63,8 @@ export default function DiscoverPage() {
             <Button
               variant="outlined"
               onClick={() => handleSwipe(false)}
-              disabled={isSubmitting}
               sx={{
-                borderColor: "#000000 !important" ,
+                borderColor: "#000000 !important",
                 backgroundColor: "#ffffff !important",
                 color: "#000000 !important",
                 display: "flex",
@@ -73,7 +82,6 @@ export default function DiscoverPage() {
             <Button
               variant="contained"
               onClick={() => handleSwipe(true)}
-              disabled={isSubmitting}
               sx={{
                 backgroundColor: "#f62f79 !important",
                 color: "#ffffff !important",

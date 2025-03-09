@@ -12,18 +12,18 @@ function Layout() {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        alignItems: 'center', // Center horizontally
-        width: '100%', // Full width within the parent (70% from App.jsx)
+        alignItems: 'center',
+        width: '100%',
       }}
     >
       <NavBar />
-      <TabNav />
       <Box sx={{ flexGrow: 1, width: '100%' }}>
         <Outlet />
       </Box>
     </Box>
   );
 }
+
 
 function ProtectedPages() {
   return (

@@ -3,13 +3,20 @@ import { Card, Box, CardContent, CardMedia, Chip, Typography } from '@mui/materi
 
 export default function UserCard({ user }) {
   return (
-    <Card sx={{ maxWidth: 500, width: '100%', height: 'auto', margin: '2rem auto', boxShadow: 3 }}>
+    <Card sx={{ maxWidth: 500, width: '100%', margin: '2rem auto', boxShadow: 3 }}>
       <CardMedia
         component="img"
-        height="200"
+        // Remove fixed "height" prop
+        // height="200"
         image={user.profilePicture || 'https://www.gravatar.com/avatar/placeholder'}
         alt={user.name}
-        sx={{ objectFit: 'cover' }}
+        sx={{
+          objectFit: 'contain',    // or 'cover' if you prefer a cropped fill
+          width: '100%',
+          height: 'auto',
+          maxHeight: '300px',      // limit max height so it doesn't blow up the layout
+          backgroundColor: '#f5f5f5',
+        }}
       />
       <CardContent sx={{ padding: 3 }}>
         <Typography gutterBottom variant="h4" component="div">
@@ -20,7 +27,6 @@ export default function UserCard({ user }) {
         </Typography>
         <Typography variant="body1" color="text.secondary" gutterBottom>
           <strong>Bio: </strong> {user.bio || 'No bio available'}
-          <br />
         </Typography>
         <Typography variant="body1" color="text.secondary" gutterBottom>
           <strong>Major:</strong> {user.major || 'N/A'}
@@ -43,7 +49,6 @@ export default function UserCard({ user }) {
             </Typography>
           )}
         </Box>
-
       </CardContent>
     </Card>
   );
