@@ -19,6 +19,7 @@ export default function ProfileEdit({ profile, refetch }) {
     register,
     handleSubmit,
     control,
+    reset,
     formState: { errors, isSubmitting }
   } = useForm({
     defaultValues: {
@@ -41,6 +42,16 @@ export default function ProfileEdit({ profile, refetch }) {
     }
   };
 
+  const handleCancel = () => {
+    reset({
+      name: profile.name || '',
+      profilePicture: profile.profilePicture || '',
+      major: profile.major || '',
+      topics: profile.topics || [],
+      bio: profile.bio || ''
+    });
+  };
+
   return (
     <Container maxWidth="sm" sx={{ my: 4 }}>
       <Typography variant="h4" gutterBottom>
@@ -61,7 +72,7 @@ export default function ProfileEdit({ profile, refetch }) {
             control={control}
             rules={{ required: "Major is required" }}
             render={({ field }) => (
-              <MajorSelect 
+              <MajorSelect
                 value={field.value}
                 onChange={field.onChange}
                 label="Major"
@@ -99,15 +110,34 @@ export default function ProfileEdit({ profile, refetch }) {
           <BioField register={register} errors={errors} />
         </Box>
 
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          sx={{ mt: 2 }}
-          disabled={isSubmitting}
-        >
-          {isSubmitting ? 'Updating...' : 'Update Profile'}
-        </Button>
+        <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2, mt: 2 }}>
+          <Button
+            variant='outlined'
+            onClick={handleCancel}
+            sx={{ 
+              mt: 2,
+              fontSize: '1rem',
+              color: '#000000 !important',
+              border: '1px solid #000000 !important',
+              backgroundColor: '#ffffff !important',
+              '&:hover': {
+                backgroundColor: '#f0f0f0 !important',
+                borderColor: '#000000 !important',
+              }
+            }}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2 }}
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? 'Updating...' : 'Update'}
+          </Button>
+        </Box>
       </Box>
 
       {/* Success Snackbar */}

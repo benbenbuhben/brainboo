@@ -11,18 +11,33 @@ const tabItems = [
 
 export default function TabsNav() {
   const location = useLocation();
-
-  // Determine the current tab index by matching the path.
-  // If no match, default to false (which means no tab selected).
   const currentTab = tabItems.findIndex((tab) => tab.path === location.pathname);
 
   return (
-    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+    <Box>
       <Tabs
         value={currentTab === -1 ? false : currentTab}
-        variant="scrollable"
-        scrollButtons="auto"
-        aria-label="navigation tabs"
+        variant="standard" // or "scrollable"
+        TabIndicatorProps={{ style: { backgroundColor: '#f62f79', height: '2px' } }}
+        sx={{
+          minHeight: '48px',
+          '& .MuiTabs-flexContainer': {
+            gap: 2, // spacing between tabs
+          },
+          '& .MuiTab-root': {
+            textTransform: 'none',
+            fontWeight: 500,
+            color: '#555',
+            px: 1,
+            py: 0,
+          },
+          '& .Mui-selected': {
+            color: '#f62f79',
+            fontWeight: 600,
+          },
+          // Remove bottom border if you want it cleaner
+          borderBottom: 'none !important',
+        }}
       >
         {tabItems.map((tab, index) => (
           <Tab
@@ -30,11 +45,10 @@ export default function TabsNav() {
             label={tab.label}
             component={Link}
             to={tab.path}
-            // Optionally, you can add a sx prop here to further customize the look.
-            sx={{ textTransform: 'none', fontWeight: 'medium' }}
           />
         ))}
       </Tabs>
     </Box>
   );
 }
+

@@ -2,7 +2,16 @@
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect, useState, useRef } from "react";
 import { io } from "socket.io-client";
-import { Dialog, TextField, Button, Typography } from "@mui/material";
+import {
+  Dialog,
+  DialogTitle,
+  IconButton,
+  TextField,
+  Button,
+  Typography,
+  Box
+} from "@mui/material";
+import CloseIcon from '@mui/icons-material/Close';
 import { getChats } from "../api";
 import { useChatSummary } from "../hooks";
 
@@ -17,7 +26,6 @@ export default function ChatModal({ open, onClose, user, peer }) {
   const [hasMore, setHasMore] = useState(true);
   const chatContainerRef = useRef(null);
   const [initialLoad, setInitialLoad] = useState(true);
-
 
   const { mutate: summarizeChat, isPending: isSummarizing } = useChatSummary();
 
@@ -128,16 +136,53 @@ export default function ChatModal({ open, onClose, user, peer }) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth>
-      <div style={{ padding: "20px" }}>
-        <Typography variant="h6">{`Chat with ${peer?.name}`}</Typography>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullWidth
+      maxWidth="sm"
+      sx={{
+        '& .MuiDialog-paper': {
+          height: '70vh',
+          display: 'flex',
+          flexDirection: 'column',
+        }
+      }}
+    >
+      <DialogTitle
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          padding: "10px 20px",
+          borderBottom: "1px solid #ccc",
+          flexShrink: 0,
+        }}>
+        <Typography variant="h5">{`Chat with ${peer?.name}`}</Typography>
+        <IconButton
+          onClick={onClose}
+          style={{ position: "absolute", right: "10px", top: "10px" }}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <Box
+        sx={{
+          flex: 1,
+          display: "flex",
+          flexDirection: "column",
+          padding: "0 20px 20px 20px",
+          overflowY: "auto",
+        }}>
         <div
           ref={chatContainerRef}
           style={{
-            height: "300px",
+            flex: 1,
             overflowY: "auto",
             border: "1px solid #ccc",
             padding: "10px",
+            backgroundColor: "#fafafa",
+            borderRadius: "8px",
+            marginBottom: "20px",
           }}
           onScroll={handleScroll}
         >
@@ -148,7 +193,8 @@ export default function ChatModal({ open, onClose, user, peer }) {
             >
               <Typography
                 style={{
-                  background: msg.sender === user.sub ? "#4caf50" : "#f1f1f1",
+                  background: msg.sender === user.sub ? "#f62f79" : "#f1f1f1",
+                  color: msg.sender === user.sub ? "#ffffff" : "#000000",
                   padding: "5px 10px",
                   borderRadius: "8px",
                   display: "inline-block",
@@ -159,29 +205,30 @@ export default function ChatModal({ open, onClose, user, peer }) {
             </div>
           ))}
         </div>
-        <TextField
-          fullWidth
-          value={newMessage}
-          onChange={(e) => setNewMessage(e.target.value)}
-          placeholder="Type a message..."
-          style={{ marginTop: "10px" }}
-        />
-        <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
-          <Button variant="contained" color="primary" onClick={sendMessage}>
-            Send
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleSummarize}
-            disabled={isSummarizing}
-          >
-            {isSummarizing ? "Summarizing..." : "Summarize with AI"}
-          </Button>
-          <Button onClick={onClose} color="secondary">
-            Close
-          </Button>
-        </div>
-      </div>
+        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
+          <TextField
+            fullWidth
+            value={newMessage}
+            onChange={(e) => setNewMessage(e.target.value)}
+            placeholder="Type a message..."
+          />
+          <Box sx={{ display: "flex", gap: 2 }}>
+            <Button variant="contained" color="primary" onClick={sendMessage}>
+              Send
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={handleSummarize}
+              disabled={isSummarizing}
+            >
+              {isSummarizing ? "Summarizing..." : "Summarize with AI"}
+            </Button>
+            <Button onClick={onClose} color="secondary">
+              Close
+            </Button>
+          </Box>
+        </Box>
+      </Box>
     </Dialog>
   );
 }

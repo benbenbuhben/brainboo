@@ -67,9 +67,6 @@ services:
     restart: always
     mem_limit: 8g
 
-
-
-
 volumes:
   mongo-data:
   node_modules:

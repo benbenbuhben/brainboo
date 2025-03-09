@@ -12,7 +12,9 @@ export default function ProfilePage() {
   const [tabIndex, setTabIndex] = useState(0);
 
   if (!isAuthenticated) {
-    return <div>Please log in to view your profile.</div>;
+    return <div
+      style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}
+    >Please log in to view your profile.</div>;
   }
 
   if (isLoading) {
@@ -32,10 +34,44 @@ export default function ProfilePage() {
   };
 
   return (
-    <Box sx={{ padding: '1rem' }}>
-      <Tabs value={tabIndex} onChange={handleTabChange} aria-label="Profile Tabs">
-        <Tab label="Edit Profile" />
-        <Tab label="View Profile" />
+    <Box sx={{ padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Tabs
+        value={tabIndex}
+        onChange={handleTabChange}
+        aria-label="Profile Tabs"
+        sx={{ borderBottom: 1, borderColor: 'divider', backgroundColor: "transparent important!" }}>
+        <Tab
+          sx={{
+            textTransform: 'none',
+            fontWeight: 'medium',
+            outline: 'none',
+            "&:hover": {
+              backgroundColor: '#f0f0f0',
+              borderRadius: '4px',
+              color: '#000000',
+            },
+            "&:focus": {
+              outline: 'none',
+            }
+          }}
+          label="Edit Profile"
+        />
+        <Tab
+          sx={{
+            textTransform: 'none',
+            fontWeight: 'medium',
+            outline: 'none',
+            "&:hover": {
+              backgroundColor: '#f0f0f0',
+              borderRadius: '4px',
+              color: '#000000',
+            },
+            "&:focus": {
+              outline: 'none',
+            }
+          }}
+          label="View Profile"
+        />
       </Tabs>
       <Box sx={{ mt: 3 }}>
         {tabIndex === 0 && <ProfileEdit profile={profile} refetch={refetch} />}
