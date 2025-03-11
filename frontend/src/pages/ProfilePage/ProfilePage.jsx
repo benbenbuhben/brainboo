@@ -49,7 +49,15 @@ export default function ProfilePage() {
   };
 
   return (
-    <Box sx={{ padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box
+      sx={{
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+      }}
+    >
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
@@ -88,7 +96,7 @@ export default function ProfilePage() {
           label="View Profile"
         />
       </Tabs>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3, width: '60%' }}>
         {tabIndex === 0 && <ProfileEdit profile={profile} refetch={refetch} />}
         {tabIndex === 1 && <ProfileView profile={profile} userEmail={user.email} />}
       </Box>
