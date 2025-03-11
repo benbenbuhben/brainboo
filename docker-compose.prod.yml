@@ -43,24 +43,40 @@ services:
       dockerfile: Dockerfile
     container_name: brainboo-frontend
     restart: always
-    ports:
-      - "80:80"
     env_file:
       - .env.prod
+    expose:
+      - "80"
     depends_on:
       - backend
+
+  caddy:
+    image: caddy:latest
+    container_name: brainboo-caddy
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
 
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
+    restart: always
     ports:
       - "11434:11434"
     volumes:
       - ./ollama_data:/root/.ollama
       - ./entrypoint.sh:/entrypoint.sh:ro
     entrypoint: ["/bin/bash", "/entrypoint.sh"]
-    restart: always
     mem_limit: 8g
 
 volumes:
   mongo-data:
+  caddy_data:
+  caddy_config:
