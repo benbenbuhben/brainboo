@@ -18,7 +18,22 @@ export default function MatchesPage() {
   }
 
   if (isLoading) {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 3,
+          minHeight: '60vh',
+          width: '100%',
+          marginTop: '2rem'
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: '#f62f79' }} />
+      </Box>
+    );
   }
 
   if (error) {

@@ -16,7 +16,22 @@ export default function DiscoverPage() {
   const [showConfetti, setShowConfetti] = useState(false);
 
   if (isLoading) {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 3,
+          minHeight: '60vh',
+          width: '100%',
+          marginTop: '2rem'
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: '#f62f79' }} />
+      </Box>
+    );
   }
 
   if (error) {
@@ -25,38 +40,38 @@ export default function DiscoverPage() {
 
   if (!discoverUsers || discoverUsers.length === 0 || currentIndex >= discoverUsers.length) {
     return (
-      <Box 
-      sx={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        minHeight: '60vh',
-        textAlign: 'center',
-        gap: 3
-      }}
-    >
-      <Typography 
-        variant="h4" 
-        sx={{ 
-          color: '#f62f79',
-          fontWeight: 'bold',
-          marginBottom: 2
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '60vh',
+          textAlign: 'center',
+          gap: 3
         }}
       >
-        All Caught Up! 🎓
-      </Typography>
-      <Typography 
-        variant="h6" 
-        sx={{ 
-          color: '#666',
-          maxWidth: '600px',
-          lineHeight: 1.6
-        }}
-      >
-        You've explored all potential study partners for now. Check back soon for new matches!
-      </Typography>
-    </Box>
+        <Typography
+          variant="h4"
+          sx={{
+            color: '#f62f79',
+            fontWeight: 'bold',
+            marginBottom: 2
+          }}
+        >
+          All Caught Up! 🎓
+        </Typography>
+        <Typography
+          variant="h6"
+          sx={{
+            color: '#666',
+            maxWidth: '600px',
+            lineHeight: 1.6
+          }}
+        >
+          You've explored all potential study partners for now. Check back soon for new matches!
+        </Typography>
+      </Box>
     );
   }
 
