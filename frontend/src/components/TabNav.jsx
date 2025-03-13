@@ -20,7 +20,7 @@ export default function TabsNav() {
         variant="standard" // or "scrollable"
         TabIndicatorProps={{ style: { backgroundColor: '#f62f79', height: '2px' } }}
         sx={{
-          minHeight: '48px',
+          minHeight: '64px',
           '& .MuiTabs-flexContainer': {
             gap: 2, // spacing between tabs
           },

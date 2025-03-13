@@ -17,7 +17,7 @@ function Layout() {
       }}
     >
       <NavBar />
-      <Box sx={{ flexGrow: 1, width: '100%' }}>
+      <Box sx={{ flexGrow: 1, width: '100%', backgroundColor: 'rgb(252, 251, 242)' }}>
         <Outlet />
       </Box>
     </Box>
