@@ -18,7 +18,22 @@ export default function ProfilePage() {
   }
 
   if (isLoading) {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 3,
+          minHeight: '60vh',
+          width: '100%',
+          marginTop: '2rem'
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: '#f62f79' }} />
+      </Box>
+    );
   }
 
   if (error) {
@@ -34,7 +49,15 @@ export default function ProfilePage() {
   };
 
   return (
-    <Box sx={{ padding: '1rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+    <Box
+      sx={{
+        padding: '1rem',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+      }}
+    >
       <Tabs
         value={tabIndex}
         onChange={handleTabChange}
@@ -73,7 +96,7 @@ export default function ProfilePage() {
           label="View Profile"
         />
       </Tabs>
-      <Box sx={{ mt: 3 }}>
+      <Box sx={{ mt: 3, width: '60%' }}>
         {tabIndex === 0 && <ProfileEdit profile={profile} refetch={refetch} />}
         {tabIndex === 1 && <ProfileView profile={profile} userEmail={user.email} />}
       </Box>

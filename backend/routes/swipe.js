@@ -52,11 +52,12 @@ router.post('/', jwtCheck, async (req, res) => {
         if (!existingMatch) {
           const match = new Match({ user1, user2 });
           await match.save();
+          return res.json({ match: true });
         }
       }
     }
 
-    return res.status(200).json(swipe);
+    return res.json({ match: false });
   } catch (error) {
     console.error('Error in POST /api/swipes:', error);
     return res.status(500).json({ error: 'Failed to submit swipe.' });

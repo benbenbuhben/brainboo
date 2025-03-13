@@ -11,7 +11,22 @@ export default function ProfileGuard({ children }) {
   const { profile, isLoading: profileLoading } = useUserProfile();
 
   if (authLoading || profileLoading) {
-    return <CircularProgress />;
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: 3,
+          minHeight: '60vh',
+          width: '100%',
+          marginTop: '2rem'
+        }}
+      >
+        <CircularProgress size={60} sx={{ color: '#f62f79' }} />
+      </Box>
+    );
   }
 
   // Only display the prompt if the user is authenticated,
