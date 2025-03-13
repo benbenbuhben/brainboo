@@ -1,12 +1,15 @@
 # Stage 1: Build the React app using Node.js
 FROM node:18 AS builder
+ENV NODE_ENV=production
 
-# Set working directory
 WORKDIR /app
 
 # Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install
+RUN npm install --production=false
+
+# Install Vite globally
+RUN npm install -g vite
 
 # Copy the rest of the app's source code
 COPY . .
@@ -25,3 +28,4 @@ EXPOSE 80
 
 # Start Nginx when the container launches
 CMD ["nginx", "-g", "daemon off;"]
+

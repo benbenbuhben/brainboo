@@ -1,3 +1,15 @@
 44-192-24-87.sslip.io {
-    reverse_proxy backend:5000
+    # Route socket.io requests to the backend
+    handle /socket.io/* {
+        reverse_proxy backend:5000
+    }
+    # Route API requests to the backend
+    handle /api/* {
+        reverse_proxy backend:5000
+    }
+    # All other requests go to the frontend
+    handle {
+        reverse_proxy frontend:80
+    }
 }
+
