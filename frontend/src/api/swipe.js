@@ -15,6 +15,5 @@ export async function submitSwipe(getAccessTokenSilently, swipeData) {
     throw new Error('Error submitting swipe');
   }
   const data = await response.json();
-  console.log('Swipe from server:', data);
   return data;
 }

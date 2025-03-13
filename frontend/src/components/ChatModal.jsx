@@ -14,6 +14,9 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import { getChats } from "../api";
 import { useChatSummary } from "../hooks";
+import ReactMarkdown from 'react-markdown';
+import SendIcon from '@mui/icons-material/Send';
+
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
 const socket = io(API_URL);
@@ -95,7 +98,7 @@ export default function ChatModal({ open, onClose, user, peer }) {
     // Add an initial AI message with placeholder text.
     setMessages((prev) => [
       ...prev,
-      { sender: "AI", content: "AI Says: " }
+      { sender: "AI", content: "🤖 Brain Boo Bot says: " }
     ]);
   
     summarizeChat(
@@ -149,22 +152,24 @@ export default function ChatModal({ open, onClose, user, peer }) {
         }
       }}
     >
-      <DialogTitle
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          padding: "10px 20px",
-          borderBottom: "1px solid #ccc",
-          flexShrink: 0,
-        }}>
-        <Typography variant="h5">{`Chat with ${peer?.name}`}</Typography>
-        <IconButton
-          onClick={onClose}
-          style={{ position: "absolute", right: "10px", top: "10px" }}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
+    <DialogTitle
+      component="div" // This makes it render as a <div> instead of <h2>
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        padding: "10px 20px",
+        borderBottom: "1px solid #ccc",
+        flexShrink: 0,
+      }}
+    >
+      <Typography variant="h5" component="div">
+        {`Chat with ${peer?.name}`}
+      </Typography>
+      <IconButton onClick={onClose} style={{ position: "absolute", right: "10px", top: "10px" }}>
+        <CloseIcon />
+      </IconButton>
+    </DialogTitle>
       <Box
         sx={{
           flex: 1,
@@ -186,24 +191,42 @@ export default function ChatModal({ open, onClose, user, peer }) {
           }}
           onScroll={handleScroll}
         >
-          {messages.map((msg, index) => (
-            <div
-              key={index}
-              style={{ textAlign: msg.sender === user.sub ? "right" : "left" }}
-            >
-              <Typography
+          {messages.map((msg, index) => {
+            const isSender = msg.sender === user.sub;
+            const isAI = msg.sender === "AI";
+            const justify = isSender ? "flex-end" : "flex-start";
+            const background = isAI ? "#6c63ff" : (isSender ? "#f62f79" : "#f1f1f1");
+            const color = isAI ? "#fff" : (isSender ? "#ffffff" : "#000000");
+
+            return (
+              <div
+                key={index}
                 style={{
-                  background: msg.sender === user.sub ? "#f62f79" : "#f1f1f1",
-                  color: msg.sender === user.sub ? "#ffffff" : "#000000",
-                  padding: "5px 10px",
-                  borderRadius: "8px",
-                  display: "inline-block",
+                  display: 'flex',
+                  justifyContent: justify,
+                  marginBottom: '8px',
                 }}
               >
-                {msg.content}
-              </Typography>
-            </div>
-          ))}
+                <Typography
+                  component="div"
+                  style={{
+                    maxWidth: '75%',
+                    background: background,
+                    color: color,
+                    padding: '4px 8px',
+                    borderRadius: '8px',
+                    lineHeight: 1.4,
+                  }}
+                >
+                  {isAI ? (
+                    <ReactMarkdown>{msg.content}</ReactMarkdown>
+                  ) : (
+                    msg.content
+                  )}
+                </Typography>
+              </div>
+            );
+          })}
         </div>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
           <TextField
@@ -212,20 +235,49 @@ export default function ChatModal({ open, onClose, user, peer }) {
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
           />
-          <Box sx={{ display: "flex", gap: 2 }}>
-            <Button variant="contained" color="primary" onClick={sendMessage}>
-              Send
-            </Button>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              mt: 2,
+            }}
+          >
+            {/* Left side: Summarize with AI */}
             <Button
-              variant="outlined"
-              onClick={handleSummarize}
+              variant="contained"
               disabled={isSummarizing}
+              sx={{
+                backgroundColor: "#6c63ff !important",
+                color: "#fff !important",
+                fontWeight: "bold !important",
+                "&:hover": {
+                  backgroundColor: "#574fd6 !important",
+                },
+              }}
+              onClick={handleSummarize}
             >
-              {isSummarizing ? "Summarizing..." : "Summarize with AI"}
+              {isSummarizing ? "Summarizing..." : "✨ Summarize with AI"}
             </Button>
-            <Button onClick={onClose} color="secondary">
-              Close
-            </Button>
+
+            {/* Right side: Close and Send */}
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button
+                variant="contained"
+                sx={{
+                  backgroundColor: "#f62f79 !important",
+                  color: "#fff !important",
+                  fontWeight: "bold !important",
+                  "&:hover": {
+                    backgroundColor: "#e0296a !important",
+                  },
+                }}
+                onClick={sendMessage}
+              >
+                <SendIcon sx={{ mr: 1 }} />
+                Send
+              </Button>
+            </Box>
           </Box>
         </Box>
       </Box>

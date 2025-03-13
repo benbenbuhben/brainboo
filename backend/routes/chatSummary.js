@@ -1,5 +1,6 @@
 import express from 'express';
 import Message from '../models/Message.js';
+import User from '../models/User.js';
 
 const router = express.Router();
 
@@ -11,14 +12,34 @@ router.post('/summary', async (req, res) => {
       return res.status(400).json({ error: 'Missing senderId or receiverId in request body.' });
     }
 
-    // Fetch messages and build the transcript as before…
+    // Fetch messages in chronological order
     const messages = await Message.find({
       $or: [
         { sender: senderId, receiver: receiverId },
         { sender: receiverId, receiver: senderId }
       ]
     }).sort({ createdAt: 1 });
-    const transcript = messages.map(msg => `${msg.sender}: ${msg.content}`).join('\n');
+
+    // Collect unique auth0Ids from the messages
+    const auth0Ids = new Set();
+    messages.forEach(msg => {
+      auth0Ids.add(msg.sender);
+      auth0Ids.add(msg.receiver);
+    });
+
+    // Fetch the user documents for these auth0Ids
+    const users = await User.find({ auth0Id: { $in: Array.from(auth0Ids) } });
+    // Build a mapping from auth0Id to user name
+    const userMap = {};
+    users.forEach(user => {
+      userMap[user.auth0Id] = user.name;
+    });
+
+    // Build the transcript using the user names if available
+    const transcript = messages
+      .map(msg => `${userMap[msg.sender] || msg.sender}: ${msg.content}`)
+      .join('\n');
+
     const prompt = `Please summarize the following conversation:\n\n${transcript}`;
 
     const ollamaUrl = 'http://ollama:11434/api/generate';
@@ -40,7 +61,7 @@ router.post('/summary', async (req, res) => {
       'Cache-Control': 'no-cache'
     });
 
-    // Create a reader to stream data from Ollama
+    // Stream the response from Ollama
     const reader = ollamaResponse.body.getReader();
     const decoder = new TextDecoder();
 
@@ -48,7 +69,7 @@ router.post('/summary', async (req, res) => {
       const { done, value } = await reader.read();
       if (done) break;
       const chunk = decoder.decode(value);
-      res.write(chunk); // send chunk to client
+      res.write(chunk);
     }
     res.end();
   } catch (error) {
@@ -56,6 +77,5 @@ router.post('/summary', async (req, res) => {
     res.status(500).json({ error: 'Failed to summarize chat' });
   }
 });
-
 
 export default router;

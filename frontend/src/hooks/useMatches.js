@@ -12,7 +12,6 @@ export default function useMatches() {
     const fetchMatches = async () => {
       try {
         const data = await getMatches(getAccessTokenSilently);
-        console.log("Fetched matches:", data);
         setMatches(data);
       } catch (err) {
         setError(err);

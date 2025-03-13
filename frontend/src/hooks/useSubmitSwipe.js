@@ -11,7 +11,6 @@ export default function useSubmitSwipe() {
     mutationFn: (swipeData) => submitSwipe(getAccessTokenSilently, swipeData),
     onSuccess: (data) => {
       // Invalidate the discover query so that the list refreshes if needed.
-      console.log('Mutation successful:', data);
       queryClient.invalidateQueries({ queryKey: ['discover'] });
     },
   });
