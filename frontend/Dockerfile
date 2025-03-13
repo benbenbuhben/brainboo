@@ -1,31 +1,28 @@
-# Stage 1: Build the React app using Node.js
+# 1) BUILD STAGE
 FROM node:18 AS builder
-ENV NODE_ENV=production
 
 WORKDIR /app
-
-# Copy package files and install dependencies
 COPY package*.json ./
-RUN npm install --production=false
+RUN npm install
 
-# Install Vite globally
-RUN npm install -g vite
-
-# Copy the rest of the app's source code
+# Copy the rest of the frontend source
 COPY . .
 
-# Build the app for production
+# Build the production React app into /dist
 RUN npm run build
 
-# Stage 2: Serve the built app using Nginx
-FROM nginx:alpine
+# 2) RUN STAGE with Caddy
+FROM caddy:latest
 
-# Copy the build output from the builder stage to Nginx's html directory
-COPY --from=builder /app/dist /usr/share/nginx/html
+# Copy the compiled React app from the builder stage into /usr/share/caddy
+COPY --from=builder /app/dist /usr/share/caddy
 
-# Expose port 80 for the container
+# Copy a custom Caddyfile that instructs Caddy how to serve your app
+COPY Caddyfile /etc/caddy/Caddyfile
+
+# Expose HTTP and HTTPS
 EXPOSE 80
+EXPOSE 443
 
-# Start Nginx when the container launches
-CMD ["nginx", "-g", "daemon off;"]
-
+# Run Caddy with your config
+CMD ["caddy", "run", "--config", "/etc/caddy/Caddyfile"]

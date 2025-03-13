@@ -40,25 +40,12 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     container_name: brainboo-frontend
-    restart: always
-    expose:
-      - "80"
-    depends_on:
-      - backend
-
-  caddy:
-    image: caddy:latest
-    container_name: brainboo-caddy
-    restart: always
+    # We will handle ports 80 and 443 here, because Caddy is our main gateway
     ports:
       - "80:80"
       - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
     depends_on:
-      - frontend
+      - backend
 
   ollama:
     image: ollama/ollama:latest
@@ -75,4 +62,3 @@ services:
 volumes:
   mongo-data:
   caddy_data:
-  caddy_config:

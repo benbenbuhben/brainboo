@@ -1,0 +1,23 @@
+# Replace with your actual domain or sslip.io domain
+44-192-24-87.sslip.io {
+
+    # 1) Proxy all /api/* and /socket.io/* to your backend
+    handle /api/* {
+        reverse_proxy backend:5000
+    }
+    handle /socket.io/* {
+        reverse_proxy backend:5000
+    }
+
+    # 2) Serve all other paths from /usr/share/caddy (where your built app lives)
+    handle {
+        # Set the site’s root folder
+        root * /usr/share/caddy
+
+        # The magic: if a requested file does NOT exist, rewrite to /index.html
+        try_files {path} /index.html
+
+        # Then serve the final file
+        file_server
+    }
+}
