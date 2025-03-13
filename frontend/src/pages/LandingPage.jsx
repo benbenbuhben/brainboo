@@ -1,8 +1,10 @@
 // src/pages/LandingPage.jsx
 import { Link } from 'react-router-dom';
 import { Box, Typography, Button, Container, Grid } from '@mui/material';
+import { useAuth0 } from '@auth0/auth0-react';
 
 export default function LandingPage() {
+  const { isAuthenticated } = useAuth0();
   return (
     <>
       {/* HERO SECTION */}
@@ -27,7 +29,7 @@ export default function LandingPage() {
           </Typography>
           <Button
             component={Link}
-            to="/login"
+            to={isAuthenticated ? "/discover" : "/login"}
             variant="contained"
             sx={{
               backgroundColor: '#ffffff',
