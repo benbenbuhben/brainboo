@@ -1,128 +1,197 @@
 # BrainBoo
 
-BrainBoo is a full-stack web application that enhances student collaboration by making peer learning more effective. It connects students for study sessions through matchmaking, real-time chat, scheduling, and robust profile management—all secured via Auth0 authentication.
+BrainBoo is a full-stack web application designed to enhance student collaboration by matching study partners. It brings together real-time chat, profile management, and intelligent matchmaking based on user interests and majors.
 
-## Project Overview
+---
 
-BrainBoo currently consists of:
+## Table of Contents
+
+- [Overview](#overview)
+- [Architecture](#architecture)
+- [Getting Started in Development](#getting-started-in-development)
+- [Production Deployment on EC2](#production-deployment-on-ec2)
+- [Seeding the Database](#seeding-the-database)
+- [Project Structure](#project-structure)
+- [Next Steps](#next-steps)
+- [Contributing](#contributing)
+- [License](#license)
+
+---
+
+## Overview
+
+BrainBoo connects students by matching them based on similar majors and overlapping topics of interest. Users sign in via Auth0, and their profiles are stored in MongoDB. Key features include:
+
+- **Real-Time Chat:** Powered by Socket.IO for instant messaging.
+- **Smart Matching:** Users are suggested potential study partners based on shared majors and topics.
+- **Profile Management:** Users can view and edit their profile details with fields such as bio, profile picture, major, and topics.
+- **AI Chat Summarization:** Conversations can be summarized using a streaming response from the Ollama service.
+
+---
+
+## Architecture
 
 - **Frontend:**  
-  A React-based web application using Vite, Material UI, React Router, and Auth0 for authentication. It includes pages for landing, login, profile (with view and edit tabs), matches, and discovery.
-  
+  - Built with React (via Vite), Material UI, and React Router.
+  - Uses Auth0 for authentication.
+  - Contains pages for landing, login, profile (with view/edit tabs), matches, and discovery.
+  - Dockerized with a dedicated production build that uses Caddy to serve the app.
+
 - **Backend:**  
-  An Express server with MongoDB for storing user profiles. It includes endpoints for fetching, creating, and updating user profiles. The backend uses Mongoose to enforce a unique index on user `auth0Id` to avoid duplicate profiles.
+  - Built with Express, MongoDB, and Mongoose.
+  - Provides RESTful endpoints for user profiles, swipes, matches, chats, and chat summaries.
+  - Uses Socket.IO for real-time chat communication.
+  - Protected endpoints using Auth0 JWT verification.
 
-- **Authentication:**  
-  Auth0 is used to authenticate users, and profile data is automatically created or updated based on the authenticated user's information.
+- **Docker & Deployment:**  
+  - Development uses a local Docker Compose file.
+  - Production deployment is managed via `docker-compose.prod.yml`, which is configured for deployment on an EC2 instance.
+  - Services include MongoDB, Mongo Express, the backend, the frontend (served by Caddy), and Ollama for AI functionalities.
 
-- **Docker Compose:**  
-  The entire application (frontend, backend, MongoDB, and Mongo Express) is containerized with Docker Compose for easy development and deployment.
+---
 
-## Getting Up and Running in Development
+## Getting Started in Development
 
 ### Prerequisites
 
-- [Docker](https://docs.docker.com/get-docker/) installed on your system.
-- [Docker Compose](https://docs.docker.com/compose/install/) installed.
+- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed.
+- Local environment configured with necessary credentials.
 
 ### Environment Variables
 
-Create `.env` files in both the `frontend` and `backend` directories with the following variables:
+Create a `.env` file in both the **frontend** and **backend** directories.
 
 #### Frontend (`./frontend/.env`)
-
 ```
 VITE_AUTH0_DOMAIN=your-auth0-domain
 VITE_AUTH0_CLIENT_ID=your-auth0-client-id
+VITE_API_URL=http://localhost:5001
 ```
 
-Replace `your-auth0-domain` and `your-auth0-client-id` with your actual Auth0 credentials.
+Replace with your actual Auth0 credentials and API URL.
 
 #### Backend (`./backend/.env`)
-
 ```
 PORT=5000
 MONGO_URI=mongodb://mongo:27017/brainboo
 AUTH0_DOMAIN=your-auth0-domain
 ```
 
-Replace `your-auth0-domain` with your actual Auth0 domain. Note that the `MONGO_URI` is set up for Docker networking (using the service name `mongo`).
+Replace with your Auth0 domain. (Note: the `MONGO_URI` is set for Docker networking.)
 
-### Running the Application
+### Running the Development Environment
 
 1. **Clone the Repository:**
+   ```
+   git clone https://github.com/yourusername/brainboo.git
+   cd brainboo
+   ```
 
-```
-git clone https://github.com/yourusername/brainboo.git
-cd brainboo
-```
-
-2. **Start the Application with Docker Compose:**
-
-```
-docker-compose up --build
-```
-
-This command builds and starts the containers for MongoDB, Mongo Express, the backend, and the frontend.
+2. **Start the Local Stack:**
+   Use the local development Docker Compose file (typically the default one in the repository):
+   ```
+   docker-compose up --build
+   ```
+   This will start MongoDB, Mongo Express, the backend (with hot-reloading via nodemon), and the frontend (using the local development Dockerfile).
 
 3. **Access the Application:**
+   - **Frontend:** [http://localhost:3000](http://localhost:3000)
+   - **Mongo Express:** [http://localhost:8081](http://localhost:8081)  
+     (Login credentials are set in the `docker-compose.yml` file.)
 
-- **Frontend:** Open your browser to [http://localhost:3000](http://localhost:3000)
-- **Mongo Express:** Open your browser to [http://localhost:8081](http://localhost:8081) (login credentials are set in the docker-compose file)
+---
+
+## Production Deployment on EC2
+
+The production setup uses `docker-compose.prod.yml` to build and deploy all services to an EC2 instance. Follow these steps:
+
+### Prerequisites on Your EC2 Instance
+
+- An EC2 instance running a Linux distribution.
+- Docker and Docker Compose installed.
+- Security groups configured to allow HTTP (80), HTTPS (443), and any additional ports required (e.g., MongoDB on 27017 if needed).
+
+### Deployment Steps
+
+1. **Clone the Repository on Your EC2 Instance:**
+   ```
+   git clone https://github.com/yourusername/brainboo.git
+   cd brainboo
+   ```
+
+2. **Set Up Environment Variables:**
+   Ensure that your `./frontend/.env` and `./backend/.env` files are updated with production credentials (for Auth0, API URLs, etc.).
+
+3. **Build and Deploy with Docker Compose Prod:**
+   Use the production compose file to build and start the containers:
+   ```
+   docker-compose -f docker-compose.prod.yml up --build -d
+   ```
+   This command builds the images and starts the services in detached mode.
+
+4. **Access the Application:**
+   The frontend will be available on ports 80 and 443. Make sure your EC2 security groups allow traffic on these ports.
+
+5. **Monitoring and Logs:**
+   You can view logs for each container using:
+   ```
+   docker-compose -f docker-compose.prod.yml logs -f
+   ```
+
+---
 
 ## Seeding the Database
 
-BrainBoo includes a seed script (seedFakeUsers.js) to insert fake users and generate random swipe records. The script features interactive prompts that:
+BrainBoo includes a script to seed the database with fake user data.
 
-- Warn you if there are already more than 10 users in the database.
-- Notify you if no users exist (suggesting you log in to create your own user first).
-- Ask for confirmation before proceeding.
-- Insert fake user data without overwriting existing users.
-- Optionally add random swipe records for the new users.
+### Running the Seed Script
 
-### How to Run the Seed Script
+1. Ensure your Docker Compose stack is running.
+2. Execute the seed script in the backend container:
+   ```
+   docker exec -it brainboo-backend node seedFakeUsers.js
+   ```
+3. Follow the interactive prompts to insert fake users and optionally random swipe records.
 
-1. Ensure the Docker Compose stack is up and running.
+---
 
-2. Run the Seed Script in the Backend Container:
+## Project Structure
 
-```bash
-docker exec -it brainboo-backend node seedFakeUsers.js
 ```
-This command opens an interactive terminal in the backend container. Follow the prompts to complete the seeding process.
+brainboo/
+├── backend/
+│   ├── models/             # Mongoose models (User, Message, Swipe, Match)
+│   ├── routes/             # API routes (users, discover, swipes, matches, chats, chatSummary)
+│   ├── seedFakeUsers.js    # Script to seed the database
+│   ├── Dockerfile          # Dockerfile for the backend
+│   ├── app.js              # Express app configuration
+│   └── ...                 
+├── frontend/
+│   ├── public/             # Public assets (images, favicon, etc.)
+│   ├── src/                # React source code (pages, components, hooks, api)
+│   ├── Dockerfile          # Production Dockerfile (used in docker-compose.prod.yml)
+│   ├── local.Dockerfile    # Development Dockerfile
+│   ├── vite.config.js      # Vite configuration
+│   └── ...                 
+├── docker-compose.yml      # Docker Compose file for development
+├── docker-compose.prod.yml # Docker Compose file for production deployment on EC2
+└── README.md               # This file
+```
 
-## Current State and Next Steps
+## Next Steps
 
-### Current State
+- **Enhanced Collaboration:** Add features like study session scheduling and group chats.
+- **Testing:** Implement unit and integration tests for both frontend and backend.
+- **CI/CD Pipeline:** Automate deployment pipelines to streamline production updates.
 
-- **Authentication & Profile Management:**  
-  Users can log in using Auth0. Upon login, a profile is automatically created or fetched from MongoDB. The profile page includes two tabs:
-  - **View Profile:** Displays the user's profile picture (or a placeholder if not set) and saved details.
-  - **Edit Profile:** Provides a form (using React Hook Form) to update the profile data.
-  
-- **Backend API:**  
-  The backend provides endpoints to fetch (`GET /api/users/me`), create (`POST /api/users`), and update (`PUT /api/users/me`) a user profile. Unique indexes ensure that duplicate profiles are not created.
+---
 
-- **Dockerized Environment:**  
-  The application is containerized for development using Docker Compose, making it easy to set up and run locally.
+## Contributing
 
-### Next Steps
+Contributions are welcome! Please fork the repository and submit pull requests. For major changes, open an issue first to discuss your proposed changes.
 
-- **Enhance Collaboration Features:**  
-  Develop additional pages and functionality for real-time chat, study session scheduling, and partner matchmaking.
-  
-- **Improve UI/UX:**  
-  Refine the Material UI components and overall design for a more polished user experience.
+---
 
-- **Testing & Deployment:**  
-  Write unit and integration tests for both frontend and backend components. Prepare for deployment by setting up CI/CD pipelines.
+## License
 
-- **Refinement of Profile Management:**  
-  Consider additional profile fields (e.g., major, topics of interest, bio) and validations. Further refine error handling and logging for production use.
-
-- **Authentication Enhancements:**  
-  Explore additional Auth0 features for roles, permissions, or multi-factor authentication.
-
-## Conclusion
-
-BrainBoo is a robust foundation for a peer learning platform. With a modular design for both the frontend and backend, Dockerized development, and a focus on user profile management, the next steps will focus on enhancing collaboration features and refining the overall user experience.
+[MIT License](LICENSE)
