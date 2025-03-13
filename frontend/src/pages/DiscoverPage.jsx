@@ -3,13 +3,14 @@ import { CircularProgress, Typography, Box, Button } from '@mui/material';
 import { Favorite, HeartBroken } from '@mui/icons-material';
 import ReactConfetti from 'react-confetti';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useDiscoverUsers, useSubmitSwipe } from '../hooks';
+import { useDiscoverUsers, useSubmitSwipe, useUserProfile } from '../hooks';
 import { UserCard } from '../components';
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default function DiscoverPage() {
   const { discoverUsers, error, isLoading } = useDiscoverUsers();
+  const { profile: currentUser } = useUserProfile();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { mutateAsync: submitSwipe } = useSubmitSwipe();
@@ -75,12 +76,12 @@ export default function DiscoverPage() {
     );
   }
 
-  const currentUser = discoverUsers[currentIndex];
+  const displayedUser = discoverUsers[currentIndex];
 
   const handleSwipe = async (liked) => {
     // Submit the swipe action:
     try {
-      const result = await submitSwipe({ swipeeId: currentUser._id, liked });
+      const result = await submitSwipe({ swipeeId: displayedUser._id, liked });
       if (result?.match) {
         setShowConfetti(true);
         setTimeout(() => {
@@ -172,7 +173,7 @@ export default function DiscoverPage() {
         </Box>
       ) : (
         <>
-          <UserCard user={currentUser} />
+          <UserCard user={displayedUser} currentUser={currentUser} />
           <Box sx={{ marginTop: 2, display: 'flex', gap: 2 }}>
             <Button
               variant="outlined"
